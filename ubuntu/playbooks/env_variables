@@ -1,0 +1,20 @@
+ad_addr: 192.168.56.200
+cidr_v: 172.16.0.0/16
+
+packages:
+- kubeadm
+- kubectl
+
+services:
+- docker
+- kubelet
+- firewalld
+
+ports:
+- "6443/tcp"
+- "10250/tcp"
+- "2379-2380/tcp"
+- "10250-10252/tcp"
+- "30000-32767/tcp"
+
+token_file: join_token
