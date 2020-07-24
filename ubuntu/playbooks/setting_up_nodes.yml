@@ -6,48 +6,51 @@
   tasks:
   - name: Creating a repository file for Kubernetes
     file:
-     path: /etc/yum.repos.d/kubernetes.repo
-     state: touch
+      path: /etc/apt/sources.list.d/kubernetes.list
+      state: touch
 
   - name: Adding repository details in Kubernetes repo file.
-    blockinfile:
-     path: /etc/yum.repos.d/kubernetes.repo
-     block: |
-      [kubernetes]
-      name=Kubernetes
-      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-      enabled=1
-      gpgcheck=1
-      repo_gpgcheck=1
-      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    lineinfile:
+      path: /etc/apt/sources.list.d/kubernetes.list
+      line:
+        - deb https://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+
+  - name: Add Docker’s official GPG key and set up the repository
+    shell: |
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) stable"
 
   - name: Installing Docker and firewalld
     shell: |
-     yum install firewalld -y
-     yum install -y yum-utils device-mapper-persistent-data lvm2
-     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-     yum install docker-ce -y 
+      sudo apt-get update && sudo apt-get install -y gnupg2
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      apt-get install docker-ce -y
+      apt-get update && apt-get install -y \
+        containerd.io=1.2.13-2 \
+        docker-ce=5:19.03.11~3-0~ubuntu-$(lsb_release -cs) \
+        docker-ce-cli=5:19.03.11~3-0~ubuntu-$(lsb_release -cs)
 
   - name: Installing required packages
-    yum:
-     name: "{{ item }}"
-     state: present
+    apt:
+      name: "{{ item }}"
+      state: present
     with_items: "{{ packages }}"
 
   - name: Starting and Enabling the required services
     service:
-     name: "{{ item }}"
-     state: started
-     enabled: yes
+      name: "{{ item }}"
+      state: started
+      enabled: yes
     with_items: "{{ services }}"
 
   - name: Allow Network Ports in Firewalld
     firewalld:
-     port: "{{ item }}"
-     state: enabled
-     permanent: yes
-     immediate: yes
+      port: "{{ item }}"
+      state: enabled
+      permanent: yes
+      immediate: yes
     with_items: "{{ ports }}"
 
   - name: Enabling Bridge Firewall Rule
