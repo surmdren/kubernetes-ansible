@@ -16,7 +16,7 @@
     register: output
 
   - name: Storing Logs and Generated token for future purpose.
-    local_action: copy content="{{ output.stdout }}" dest="{{ token_file }}
+    local_action: copy content={{output.stdout}} dest={{token_file}}
     sudo: False
 
   - name: Copying required files
