@@ -11,5 +11,5 @@ kubernetes-worker-nodes
 kubernetes-master-nodes
 
 [kubernetes:vars]
-ansible_password=vagrant
-ansible_ssh_user=vagrant
+ansible_password=ysurmd
+ansible_ssh_user=ysurmd
