@@ -13,7 +13,7 @@
     lineinfile:
       path: /etc/apt/sources.list.d/kubernetes.list
       line:
-        - deb https://apt.kubernetes.io/ kubernetes-xenial main
+        - "deb https://apt.kubernetes.io/ kubernetes-xenial main"
       state: present
 
   - name: Add Docker’s official GPG key and set up the repository
