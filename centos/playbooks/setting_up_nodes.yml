@@ -22,16 +22,17 @@
       gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Installing Docker and firewalld
+  - name: Installing docker repo
     shell: "{{ item }}"
     with_items:
       - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-  - name: Installing required packages
+  - name: Installing Docker and firewalld
     yum:
-     name: "{{ item }}"
+     name: "{{ packages }}"
      state: present
-    with_items:
+    vars:
+      packages:
       - firewalld
       - yum-utils
       - device-mapper-persistent-data
