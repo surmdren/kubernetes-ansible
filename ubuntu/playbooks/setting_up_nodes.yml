@@ -17,17 +17,19 @@
       state: present
 
   - name: Add Docker’s official GPG key and set up the repository
-    shell: |
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    shell: "{{ item }}"
+    with_items:
+      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
        $(lsb_release -cs) stable"
 
   - name: Installing Docker and firewalld
-    shell: |
-      sudo apt-get update && sudo apt-get install -y gnupg2
-      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-      apt-get install docker-ce -y
-      apt-get update && apt-get install -y \
+    shell: "{{ item }}"
+    with_items:
+      - sudo apt-get update && sudo apt-get install -y gnupg2
+      - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      - apt-get install docker-ce -y
+      - apt-get update && apt-get install -y \
         containerd.io=1.2.13-2 \
         docker-ce=5:19.03.11~3-0~ubuntu-$(lsb_release -cs) \
         docker-ce-cli=5:19.03.11~3-0~ubuntu-$(lsb_release -cs)
