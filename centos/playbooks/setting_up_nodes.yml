@@ -25,13 +25,20 @@
   - name: Installing Docker and firewalld
     shell: "{{ item }}"
     with_items:
-      - yum install firewalld -y
-      - yum install -y yum-utils device-mapper-persistent-data lvm2
       - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-      - yum install -y \
-        containerd.io-1.2.13 \
-        docker-ce-19.03.11 \
-        docker-ce-cli-19.03.11
+
+  - name: Installing required packages
+    yum:
+     name: "{{ item }}"
+     state: present
+    with_items:
+      - firewalld
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+      - containerd.io-1.2.13
+      - docker-ce-19.03.11
+      - docker-ce-cli-19.03.11
 
   - name: Installing required packages
     yum:
