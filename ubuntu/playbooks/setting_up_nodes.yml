@@ -12,22 +12,21 @@
   - name: Adding repository details in Kubernetes repo file.
     lineinfile:
       path: /etc/apt/sources.list.d/kubernetes.list
-      line:
-        - "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+      line: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
       state: present
 
   - name: Add Docker’s official GPG key and set up the repository
     shell: "{{ item }}"
     with_items:
-      - sudo apt-get update && sudo apt-get install -y curl gnupg1 gnupg2 apt-transport-https ca-certificates software-properties-common
+      - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
       - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      - sudo apt-get update && sudo apt-get install -y curl gnupg1 gnupg2 apt-transport-https ca-certificates software-properties-common
       - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
        $(lsb_release -cs) stable"
 
   - name: Installing Docker and firewalld
     shell: "{{ item }}"
     with_items:
-      - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
       - apt-get install docker-ce -y
       - apt-get update && apt-get install -y \
         containerd.io=1.2.13-2 \
