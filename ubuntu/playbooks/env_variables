@@ -1,4 +1,4 @@
-ad_addr: 192.168.56.200
+ad_addr: 169.63.212.30 
 cidr_v: 172.16.0.0/16
 
 packages:
@@ -8,13 +8,13 @@ packages:
 services:
 - docker
 - kubelet
-- firewalld
+- ufw 
 
 ports:
-- "6443/tcp"
-- "10250/tcp"
-- "2379-2380/tcp"
-- "10250-10252/tcp"
-- "30000-32767/tcp"
+- 6443
+- 10250
+- 2379:2380
+- 10250:10252
+- 30000:32767
 
 token_file: join_token
